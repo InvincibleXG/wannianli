@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="万年历 - 支持1000年至2100年的精确节气历、农历和太阳历">
+  <meta name="theme-color" content="#1a1a2e">
+  <title>万年历 - 千年历法</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- 顶部标题 -->
+    <header class="header">
+      <h1>📅 万年历</h1>
+      <p class="subtitle">千年历法 · 精确节气 · 农历公历</p>
+    </header>
+
+    <!-- 日期选择器 -->
+    <section class="date-selector">
+      <div class="input-group">
+        <label for="year">年份</label>
+        <input type="number" id="year" min="1000" max="2100" placeholder="年份">
+      </div>
+      <div class="input-group">
+        <label for="month">月份</label>
+        <select id="month">
+          <option value="">请选择</option>
+          <option value="1">1月</option>
+          <option value="2">2月</option>
+          <option value="3">3月</option>
+          <option value="4">4月</option>
+          <option value="5">5月</option>
+          <option value="6">6月</option>
+          <option value="7">7月</option>
+          <option value="8">8月</option>
+          <option value="9">9月</option>
+          <option value="10">10月</option>
+          <option value="11">11月</option>
+          <option value="12">12月</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="day">日期</label>
+        <select id="day">
+          <option value="">请选择</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="type">历法</label>
+        <select id="type">
+          <option value="solar">公历</option>
+          <option value="lunar">农历</option>
+        </select>
+      </div>
+      <button id="queryBtn" class="btn">查询</button>
+    </section>
+
+    <!-- 快速跳转 -->
+    <section class="quick-nav">
+      <button class="quick-btn" id="prevYear">◀ 上年</button>
+      <button class="quick-btn" id="prevMonth">◀ 上月</button>
+      <button class="quick-btn today-btn" id="goToday">今天</button>
+      <button class="quick-btn" id="nextMonth">下月 ▶</button>
+      <button class="quick-btn" id="nextYear">下年 ▶</button>
+    </section>
+
+    <!-- 阳历信息 -->
+    <section class="card solar-info" id="solarInfo">
+      <h2>☀️ 阳历信息</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">公历日期</span>
+          <span class="value" id="solarDate">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">星期</span>
+          <span class="value" id="weekday">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">星座</span>
+          <span class="value" id="xingzuo">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">闰年</span>
+          <span class="value" id="isLeapYear">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">年内第</span>
+          <span class="value" id="dayOfYear">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">年内周</span>
+          <span class="value" id="weekOfYear">-</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 农历信息 -->
+    <section class="card lunar-info" id="lunarInfo">
+      <h2>🌙 农历信息</h2>
+      <div class="lunar-header">
+        <div class="lunar-year" id="lunarYear">-</div>
+        <div class="lunar-date" id="lunarDate">-</div>
+      </div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">年份干支</span>
+          <span class="value" id="yearGanzhi">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">月份干支</span>
+          <span class="value" id="monthGanzhi">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">日期干支</span>
+          <span class="value" id="dayGanzhi">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">生肖</span>
+          <span class="value" id="shengxiao">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">纳音</span>
+          <span class="value" id="nayin">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">五星</span>
+          <span class="value" id="wuxing">-</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 节气信息 -->
+    <section class="card jieqi-info" id="jieqiInfo">
+      <h2>🌾 节气</h2>
+      <div class="jieqi-current" id="currentJieqi">-</div>
+      <div class="jieqi-list" id="jieqiList"></div>
+    </section>
+
+    <!-- 八字信息 -->
+    <section class="card bazi-info" id="baziInfo">
+      <h2>🎴 八字</h2>
+      <div class="bazi-grid" id="baziGrid">
+        <div class="bazi-item">
+          <span class="label">年柱</span>
+          <span class="value" id="bzYear">-</span>
+        </div>
+        <div class="bazi-item">
+          <span class="label">月柱</span>
+          <span class="value" id="bzMonth">-</span>
+        </div>
+        <div class="bazi-item">
+          <span class="label">日柱</span>
+          <span class="value" id="bzDay">-</span>
+        </div>
+        <div class="bazi-item">
+          <span class="label">时柱</span>
+          <span class="value" id="bzTime">-</span>
+        </div>
+      </div>
+      <div class="shishen-list" id="shishenList"></div>
+    </section>
+
+    <!-- 吉凶信息 -->
+    <section class="card yiji-info" id="yijiInfo">
+      <h2>⚡ 宜忌吉凶</h2>
+      <div class="yiji-grid">
+        <div class="yiji-column yi">
+          <div class="column-title">✅ 宜</div>
+          <div class="column-content" id="yiList">-</div>
+        </div>
+        <div class="yiji-column ji">
+          <div class="column-title">❌ 忌</div>
+          <div class="column-content" id="jiList">-</div>
+        </div>
+      </div>
+      <div class="shen_sha">
+        <div class="info-item">
+          <span class="label">喜神</span>
+          <span class="value" id="xishen">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">福神</span>
+          <span class="value" id="fushen">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">财神</span>
+          <span class="value" id="caishen">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">冲</span>
+          <span class="value" id="chong">-</span>
+        </div>
+        <div class="info-item">
+          <span class="label">煞</span>
+          <span class="value" id="sha">-</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 星宿吉凶 -->
+    <section class="card xingxiu-info" id="xingxiuInfo">
+      <h2>⭐ 星宿 · 彭祖百忌</h2>
+      <div class="xingxiu-item">
+        <span class="label">二十八星宿</span>
+        <span class="value" id="xingxiu">-</span>
+      </div>
+      <div class="pengzu" id="pengzu">-</div>
+    </section>
+
+    <!-- 节日信息 -->
+    <section class="card festival-info" id="festivalInfo">
+      <h2>🎉 节日</h2>
+      <div class="festival-list" id="festivalList">-</div>
+    </section>
+
+    <!-- 农历月份信息 -->
+    <section class="card month-info" id="monthInfo">
+      <h2>📆 当月日历</h2>
+      <div class="month-grid" id="monthGrid"></div>
+    </section>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <p>支持 1000年 - 2100年 · 数据来源: lunar-javascript</p>
+  </footer>
+
+  <script src="lunar.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

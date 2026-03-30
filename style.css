@@ -1,0 +1,732 @@
+/* ============================================
+   万年历 - 样式表
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #1a1a2e;
+  --secondary-color: #16213e;
+  --accent-color: #e94560;
+  --success-color: #00d4ff;
+  --warning-color: #ffa502;
+  --danger-color: #ff6b6b;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --border-color: #2d2d44;
+  --bg-light: #0f3460;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --transition: all 0.3s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ============================================
+   Header
+   ============================================ */
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+  border-radius: 15px;
+  border: 1px solid var(--border-color);
+}
+
+.header h1 {
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+}
+
+/* ============================================
+   Date Selector
+   ============================================ */
+
+.date-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 25px;
+  background: rgba(22, 33, 62, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.input-group input,
+.input-group select {
+  padding: 12px;
+  background: rgba(15, 52, 96, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
+}
+
+.input-group input::placeholder {
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+
+.btn {
+  padding: 12px 30px;
+  background: linear-gradient(135deg, var(--accent-color), #ff1744);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  align-self: flex-end;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* ============================================
+   Quick Navigation
+   ============================================ */
+
+.quick-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.quick-btn {
+  padding: 10px 20px;
+  background: rgba(22, 33, 62, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+}
+
+.quick-btn:hover {
+  background: rgba(233, 69, 96, 0.2);
+  border-color: var(--accent-color);
+}
+
+.today-btn {
+  background: linear-gradient(135deg, var(--success-color), #00b8d4);
+  border: none;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.today-btn:hover {
+  transform: scale(1.05);
+}
+
+/* ============================================
+   Cards
+   ============================================ */
+
+.card {
+  background: rgba(22, 33, 62, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+}
+
+.card:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 32px rgba(233, 69, 96, 0.1);
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 15px;
+}
+
+/* ============================================
+   Info Grid
+   ============================================ */
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  background: rgba(15, 52, 96, 0.5);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent-color);
+}
+
+.info-item .label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.info-item .value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--success-color);
+}
+
+/* ============================================
+   Solar Info
+   ============================================ */
+
+.solar-info .info-item .value {
+  color: var(--warning-color);
+}
+
+/* ============================================
+   Lunar Info
+   ============================================ */
+
+.lunar-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: rgba(233, 69, 96, 0.1);
+  border-radius: 8px;
+}
+
+.lunar-year {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  text-align: center;
+}
+
+.lunar-date {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--success-color);
+  text-align: center;
+}
+
+.lunar-info .info-item .value {
+  color: var(--success-color);
+}
+
+/* ============================================
+   Jieqi Info
+   ============================================ */
+
+.jieqi-current {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--warning-color);
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(255, 165, 2, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid var(--warning-color);
+}
+
+.jieqi-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.jieqi-item {
+  padding: 12px;
+  background: rgba(15, 52, 96, 0.5);
+  border-radius: 6px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.jieqi-item:hover {
+  border-color: var(--warning-color);
+  background: rgba(255, 165, 2, 0.1);
+}
+
+.jieqi-name {
+  font-weight: 700;
+  color: var(--warning-color);
+  margin-bottom: 5px;
+}
+
+.jieqi-date {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   Bazi Info
+   ============================================ */
+
+.bazi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.bazi-item {
+  padding: 15px;
+  background: rgba(15, 52, 96, 0.5);
+  border-radius: 8px;
+  border-left: 3px solid var(--success-color);
+  text-align: center;
+}
+
+.bazi-item .label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.bazi-item .value {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--success-color);
+}
+
+.shishen-list {
+  padding: 15px;
+  background: rgba(15, 52, 96, 0.5);
+  border-radius: 8px;
+  border-left: 3px solid var(--success-color);
+}
+
+.shishen-item {
+  display: inline-block;
+  margin-right: 15px;
+  margin-bottom: 8px;
+}
+
+.shishen-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.shishen-value {
+  color: var(--success-color);
+  font-weight: 700;
+  margin-left: 5px;
+}
+
+/* ============================================
+   Yiji Info
+   ============================================ */
+
+.yiji-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.yiji-column {
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.yiji-column.yi {
+  background: rgba(0, 212, 255, 0.1);
+  border-left: 4px solid var(--success-color);
+}
+
+.yiji-column.ji {
+  background: rgba(255, 107, 107, 0.1);
+  border-left: 4px solid var(--danger-color);
+}
+
+.column-title {
+  font-weight: 700;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+.column-content {
+  line-height: 1.8;
+  word-break: break-word;
+}
+
+.yiji-column.yi .column-content {
+  color: var(--success-color);
+}
+
+.yiji-column.ji .column-content {
+  color: var(--danger-color);
+}
+
+.shen_sha {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+.shen_sha .info-item {
+  border-left-color: var(--warning-color);
+}
+
+.shen_sha .info-item .value {
+  color: var(--warning-color);
+}
+
+/* ============================================
+   Xingxiu Info
+   ============================================ */
+
+.xingxiu-item {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  background: rgba(15, 52, 96, 0.5);
+  border-radius: 8px;
+  border-left: 3px solid var(--success-color);
+  margin-bottom: 15px;
+}
+
+.xingxiu-item .label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.xingxiu-item .value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--success-color);
+}
+
+.pengzu {
+  padding: 15px;
+  background: rgba(15, 52, 96, 0.5);
+  border-radius: 8px;
+  border-left: 3px solid var(--warning-color);
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   Festival Info
+   ============================================ */
+
+.festival-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.festival-tag {
+  display: inline-block;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--accent-color), #ff1744);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ============================================
+   Month Grid
+   ============================================ */
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.month-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: rgba(15, 52, 96, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.month-day:hover {
+  border-color: var(--accent-color);
+  background: rgba(233, 69, 96, 0.2);
+}
+
+.month-day.other-month {
+  opacity: 0.3;
+}
+
+.month-day.today {
+  background: linear-gradient(135deg, var(--accent-color), #ff1744);
+  border-color: var(--accent-color);
+  font-weight: 700;
+}
+
+.month-day-solar {
+  font-weight: 700;
+  color: var(--warning-color);
+}
+
+.month-day-lunar {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+
+.footer {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-color);
+  margin-top: 50px;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 2.5rem;
+  }
+
+  .date-selector {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .yiji-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lunar-header {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .month-grid {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .month-day {
+    font-size: 0.65rem;
+    padding: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 10px;
+  }
+
+  .header {
+    padding: 20px 10px;
+    margin-bottom: 20px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .date-selector {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .btn {
+    width: 100%;
+    align-self: auto;
+  }
+
+  .quick-nav {
+    gap: 5px;
+  }
+
+  .quick-btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-item {
+    padding: 12px;
+  }
+
+  .month-day {
+    font-size: 0.6rem;
+    padding: 2px;
+  }
+}
+
+/* ============================================
+   Loading & Error States
+   ============================================ */
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+}
+
+.error {
+  padding: 20px;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid var(--danger-color);
+  border-radius: 8px;
+  color: var(--danger-color);
+  margin-bottom: 20px;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ============================================
+   Scrollbar Styling
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--primary-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--success-color);
+}
