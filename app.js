@@ -232,11 +232,11 @@
     // 阳历信息
     updateSolarInfo(solar);
     // 农历信息
-    updateLunarInfo(lunar);
+    updateLunarInfo(lunar, solar);
     // 节气
     updateJieqi(lunar, solar);
     // 八字
-    updateBazi(lunar);
+    updateBazi(lunar, solar);
     // 宜忌
     updateYiji(lunar);
     // 星宿彭祖
@@ -283,7 +283,7 @@
   // ========================================
   // 农历信息
   // ========================================
-  function updateLunarInfo(lunar) {
+  function updateLunarInfo(lunar, solar) {
     els.lunarYear.innerHTML = '<small>节气历</small>' + lunar.getYearInChinese() + '年（' + lunar.getShengxiao() + '）';
     els.lunarDate.innerHTML = '<small>农历</small>' + lunar.getMonthInChinese() + '月' + lunar.getDayInChinese();
     
@@ -296,10 +296,18 @@
     const dayNayin = lunar.getDayNaYin();
     els.nayin.textContent = dayNayin || '-';
 
-    // 五行（八字五行）
+    // 五行（八字五行，时柱用查询日期+当前时间）
     try {
       const baziWuxing = lunar.getBaZiWuXing();
-      if (baziWuxing && baziWuxing.length > 0) {
+      const now = new Date();
+      const timeSolar = Solar.fromYmdHms(
+        solar.getYear(), solar.getMonth(), solar.getDay(),
+        now.getHours(), now.getMinutes(), now.getSeconds()
+      );
+      const timeLunar = timeSolar.getLunar();
+      const timeWuxing = timeLunar.getEightChar().getTimeWuXing();
+      if (baziWuxing && baziWuxing.length >= 4) {
+        baziWuxing[3] = timeWuxing;
         els.wuxing.textContent = baziWuxing.join(' ');
       } else {
         els.wuxing.textContent = '-';
@@ -416,7 +424,7 @@
     return { name: shichenNames[idx], idx: idx };
   }
   
-  function updateBazi(lunar) {
+  function updateBazi(lunar, solar) {
     try {
       const bazi = lunar.getBaZi();
       if (bazi && bazi.length >= 4) {
@@ -429,11 +437,14 @@
         els.bzDay.textContent = '-';
       }
 
-      // 使用当前时间计算时柱
+      // 用查询日期 + 当前时分秒 组合计算时柱（天干由日柱决定）
       const now = new Date();
-      const nowSolar = Solar.fromYmdHms(now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
-      const nowLunar = nowSolar.getLunar();
-      const timeGanzhi = nowLunar.getEightChar().getTime();
+      const timeSolar = Solar.fromYmdHms(
+        solar.getYear(), solar.getMonth(), solar.getDay(),
+        now.getHours(), now.getMinutes(), now.getSeconds()
+      );
+      const timeLunar = timeSolar.getLunar();
+      const timeGanzhi = timeLunar.getEightChar().getTime();
       els.bzTime.textContent = timeGanzhi || '-';
 
       // 移除十神显示（用户不需要）
