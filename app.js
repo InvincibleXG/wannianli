@@ -24,7 +24,9 @@
     queryBtn: $('queryBtn'),
     prevYear: $('prevYear'),
     prevMonth: $('prevMonth'),
+    yesterday: $('yesterday'),
     goToday: $('goToday'),
+    tomorrow: $('tomorrow'),
     nextMonth: $('nextMonth'),
     nextYear: $('nextYear'),
     // 阳历
@@ -40,7 +42,7 @@
     yearGanzhi: $('yearGanzhi'),
     monthGanzhi: $('monthGanzhi'),
     dayGanzhi: $('dayGanzhi'),
-    shengxiao: $('shengxiao'),
+
     nayin: $('nayin'),
     wuxing: $('wuxing'),
     // 节气
@@ -65,6 +67,7 @@
     pengzu: $('pengzu'),
     // 节日
     festivalList: $('festivalList'),
+    jieqiUpcoming: $('jieqiUpcoming'),
     // 日历
     monthGrid: $('monthGrid'),
   };
@@ -85,9 +88,11 @@
     els.month.addEventListener('change', updateDayOptions);
     els.prevYear.addEventListener('click', () => navigate(-1, 0));
     els.prevMonth.addEventListener('click', () => navigate(0, -1));
+    els.yesterday.addEventListener('click', () => navigateDay(-1));
+    els.goToday.addEventListener('click', goToday);
+    els.tomorrow.addEventListener('click', () => navigateDay(1));
     els.nextMonth.addEventListener('click', () => navigate(0, 1));
     els.nextYear.addEventListener('click', () => navigate(1, 0));
-    els.goToday.addEventListener('click', goToday);
 
     // 回车查询
     document.addEventListener('keydown', (e) => {
@@ -196,6 +201,28 @@
     updateDisplay(solar);
   }
 
+  function navigateDay(delta) {
+    const date = new Date(currentYear, currentMonth - 1, currentDay);
+    date.setDate(date.getDate() + delta);
+    const y = date.getFullYear();
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+    if (y < 1000 || y > 2100) return;
+    els.year.value = y;
+    els.month.value = m;
+    updateDayOptions();
+    els.day.value = d;
+    currentYear = y;
+    currentMonth = m;
+    currentDay = d;
+    try {
+      const solar = Solar.fromYmd(y, m, d);
+      updateDisplay(solar);
+    } catch (e) {
+      alert('日期无效');
+    }
+  }
+
   // ========================================
   // 核心显示逻辑
   // ========================================
@@ -225,18 +252,18 @@
   // ========================================
   function updateSolarInfo(solar) {
     const weekNames = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-    els.solarDate.textContent = solar.getYear() + '年' + solar.getMonth() + '月' + solar.getDay() + '日';
+    els.solarDate.textContent = solar.getYear() + '.' + String(solar.getMonth()).padStart(2,'0') + '.' + String(solar.getDay()).padStart(2,'0');
     els.weekday.textContent = weekNames[solar.getWeek()];
     els.xingzuo.textContent = solar.getXingzuo();
-    els.isLeapYear.textContent = solar.isLeapYear() ? '✅ 是闰年' : '❌ 非闰年';
+    els.isLeapYear.textContent = solar.isLeapYear() ? '闰年' : '平年';
 
     // 年内第几天
     const dayOfYear = getDayOfYear(solar.getYear(), solar.getMonth(), solar.getDay());
-    els.dayOfYear.textContent = '第 ' + dayOfYear + ' 天';
+    els.dayOfYear.textContent = dayOfYear + '天';
 
     // 年内第几周
     const weekOfYear = getWeekOfYear(solar.getYear(), solar.getMonth(), solar.getDay());
-    els.weekOfYear.textContent = '第 ' + weekOfYear + ' 周';
+    els.weekOfYear.textContent = weekOfYear + '周';
   }
 
   function getDayOfYear(year, month, day) {
@@ -257,14 +284,13 @@
   // 农历信息
   // ========================================
   function updateLunarInfo(lunar) {
-    els.lunarYear.textContent = lunar.getYearInChinese() + '年（' + lunar.getShengxiao() + '年）';
-    els.lunarDate.textContent = lunar.getMonthInChinese() + '月' + lunar.getDayInChinese();
+    els.lunarYear.innerHTML = '<small>节气历</small>' + lunar.getYearInChinese() + '年（' + lunar.getShengxiao() + '）';
+    els.lunarDate.innerHTML = '<small>农历</small>' + lunar.getMonthInChinese() + '月' + lunar.getDayInChinese();
     
     // 干支
     els.yearGanzhi.textContent = lunar.getYearInGanZhi() + '（' + lunar.getShengxiao() + '）';
     els.monthGanzhi.textContent = lunar.getMonthInGanZhi();
     els.dayGanzhi.textContent = lunar.getDayInGanZhi();
-    els.shengxiao.textContent = lunar.getShengxiao();
 
     // 纳音
     const dayNayin = lunar.getDayNaYin();
@@ -288,101 +314,81 @@
   // ========================================
   function updateJieqi(lunar, solar) {
     const jieqi = lunar.getJieQi();
+    const lunarYear = lunar.getYear();
 
+    // 当前/刚过的节气
     if (jieqi) {
-      els.currentJieqi.textContent = '📖 ' + jieqi + ' · ' + solar.toYmd();
-      els.currentJieqi.style.display = 'block';
+      els.currentJieqi.textContent = jieqi;
+      els.currentJieqi.style.display = 'flex';
     } else {
-      els.currentJieqi.textContent = '当日无节气';
-      els.currentJieqi.style.display = 'block';
+      els.currentJieqi.textContent = '无节气';
+      els.currentJieqi.style.display = 'flex';
+    }
+
+    // 下一个节气 + 下一个中气
+    try {
+      const nextJie = lunar.getNextJie();
+      const nextQi = lunar.getNextQi();
+      let upcomingHTML = '';
+      if (nextJie) {
+        upcomingHTML += `<span class="upcoming-item jie"><span class="upcoming-label">下一节</span><span class="upcoming-value">${nextJie.getName()}</span><span class="upcoming-date">${nextJie.getSolar().toYmd()}</span></span>`;
+      }
+      if (nextQi) {
+        upcomingHTML += `<span class="upcoming-item qi"><span class="upcoming-label">下一中</span><span class="upcoming-value">${nextQi.getName()}</span><span class="upcoming-date">${nextQi.getSolar().toYmd()}</span></span>`;
+      }
+      els.jieqiUpcoming.innerHTML = upcomingHTML;
+    } catch (e) {
+      els.jieqiUpcoming.innerHTML = '';
     }
 
     // 本年节气列表 - 通过遍历获取
     try {
-      const jieqiList = [];
-      let current = lunar.getPrevJie();
-      
-      // 获取该年的所有节气
-      // 从冬至开始（上一个冬至）
-      while (current && current.getSolar().getYear() === lunar.getYear()) {
-        jieqiList.push(current);
-        current = current.getNextJie ? current.getNextJie() : null;
-        if (!current) break;
-      }
-      
-      // 如果没有获取到，尝试从当前日期向前后查找
-      if (jieqiList.length === 0) {
-        const jieqiTable = lunar.getJieQiTable();
-        if (jieqiTable && jieqiTable.length > 0) {
-          // jieqiTable 返回的是节气名称数组
-          // 我们需要手动构建节气对象
-          const year = lunar.getYear();
-          
-          // 从冬至开始遍历
-          let testLunar = Lunar.fromYmd(year, 11, 1);
-          let jieqiSet = new Set();
-          
-          for (let m = 11; m <= 12; m++) {
-            for (let d = 1; d <= 30; d++) {
-              try {
-                const test = Lunar.fromYmd(year, m, d);
-                const jq = test.getJieQi();
-                if (jq && !jieqiSet.has(jq)) {
-                  jieqiSet.add(jq);
-                  jieqiList.push({
-                    name: jq,
-                    solar: test.getSolar(),
-                    getName: () => jq,
-                    getSolar: () => test.getSolar()
-                  });
-                }
-              } catch (e) { /* ignore */ }
+      const yearJieqi = [];
+      // 从农历年首月开始遍历，找到该年的所有节气
+      for (let m = 1; m <= 12; m++) {
+        for (let d = 1; d <= 30; d++) {
+          try {
+            const test = Lunar.fromYmd(lunarYear, m, d);
+            const jq = test.getJieQi();
+            if (jq) {
+              const solarY = test.getSolar().getYear();
+              if (solarY === lunarYear || solarY === lunarYear + 1) {
+                yearJieqi.push({ name: jq, solar: test.getSolar(), getName: () => jq, getSolar: () => test.getSolar() });
+              }
             }
-          }
-          
-          for (let m = 1; m <= 10; m++) {
-            for (let d = 1; d <= 30; d++) {
-              try {
-                const test = Lunar.fromYmd(year, m, d);
-                const jq = test.getJieQi();
-                if (jq && !jieqiSet.has(jq)) {
-                  jieqiSet.add(jq);
-                  jieqiList.push({
-                    name: jq,
-                    solar: test.getSolar(),
-                    getName: () => jq,
-                    getSolar: () => test.getSolar()
-                  });
-                }
-              } catch (e) { /* ignore */ }
-            }
-          }
+          } catch (e) { /* ignore */ }
         }
       }
-      
-      if (jieqiList.length > 0) {
+
+      // 排序并去重
+      yearJieqi.sort((a, b) => a.getSolar().toYmd().localeCompare(b.getSolar().toYmd()));
+      const seen = new Set();
+      const unique = yearJieqi.filter(jq => {
+        if (seen.has(jq.getName())) return false;
+        seen.add(jq.getName());
+        return true;
+      }).filter(jq => {
+        const y = jq.getSolar().getYear();
+        return y === lunarYear || y === lunarYear + 1;
+      });
+
+      if (unique.length > 0) {
         els.jieqiList.innerHTML = '';
-        jieqiList.forEach((jq) => {
+        unique.forEach((jq) => {
           const item = document.createElement('div');
           item.className = 'jieqi-item';
-
           const nameEl = document.createElement('div');
           nameEl.className = 'jieqi-name';
           nameEl.textContent = jq.getName();
-
           const dateEl = document.createElement('div');
           dateEl.className = 'jieqi-date';
           dateEl.textContent = jq.getSolar().toYmd();
-
           item.appendChild(nameEl);
           item.appendChild(dateEl);
-
-          // 高亮当前节气
           if (jq.getName() === jieqi) {
             item.style.borderColor = 'var(--accent-color)';
             item.style.background = 'rgba(233, 69, 96, 0.2)';
           }
-
           els.jieqiList.appendChild(item);
         });
       } else {
@@ -391,11 +397,25 @@
     } catch (e) {
       els.jieqiList.innerHTML = '<p style="color:var(--text-secondary);">该年份暂不支持节气数据</p>';
     }
+
+    // 节日（合并到节气模块）
+    updateFestivals(solar, lunar);
   }
 
   // ========================================
   // 八字
   // ========================================
+  // 十二时辰映射
+  const shichenNames = ['子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时'];
+  
+  function getCurrentShichen() {
+    const now = new Date();
+    const hours = now.getHours();
+    // 子时(23:00-01:00)对应索引0，以此类推
+    const idx = Math.floor((hours + 1) / 2) % 12;
+    return { name: shichenNames[idx], idx: idx };
+  }
+  
   function updateBazi(lunar) {
     try {
       const bazi = lunar.getBaZi();
@@ -403,29 +423,35 @@
         els.bzYear.textContent = bazi[0];
         els.bzMonth.textContent = bazi[1];
         els.bzDay.textContent = bazi[2];
-        els.bzTime.textContent = bazi[3];
       } else {
         els.bzYear.textContent = '-';
         els.bzMonth.textContent = '-';
         els.bzDay.textContent = '-';
-        els.bzTime.textContent = '-';
       }
 
-      // 十神
-      const shishenGan = lunar.getBaZiShiShenGan();
-      const shishenZhi = lunar.getBaZiShiShenZhi();
+      // 使用当前时间计算时柱
+      const now = new Date();
+      const nowSolar = Solar.fromYmdHms(now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
+      const nowLunar = nowSolar.getLunar();
+      const timeGanzhi = nowLunar.getEightChar().getTime();
+      els.bzTime.textContent = timeGanzhi || '-';
+
+      // 移除十神显示（用户不需要）
+      els.shishenList.innerHTML = '';
       
-      if (shishenGan && shishenGan.length >= 4) {
-        els.shishenList.innerHTML = `
-          <span class="shishen-item"><span class="shishen-label">年干:</span><span class="shishen-value">${shishenGan[0]}</span></span>
-          <span class="shishen-item"><span class="shishen-label">月干:</span><span class="shishen-value">${shishenGan[1]}</span></span>
-          <span class="shishen-item"><span class="shishen-label">日干:</span><span class="shishen-value">${shishenGan[2]}</span></span>
-          <span class="shishen-item"><span class="shishen-label">时干:</span><span class="shishen-value">${shishenGan[3]}</span></span>
-        `;
-      } else {
-        els.shishenList.innerHTML = '';
-      }
+      // 显示十二时辰，标注当前时辰
+      const currentShichen = getCurrentShichen();
+      let shichenHTML = '<div class="shichen-grid">';
+      shichenNames.forEach((name, idx) => {
+        const isCurrent = idx === currentShichen.idx;
+        shichenHTML += `<span class="shichen-item${isCurrent ? ' current' : ''}">${name}</span>`;
+      });
+      shichenHTML += '</div>';
+      shichenHTML += `<div class="shichen-now">当前时辰：<strong>${currentShichen.name}</strong></div>`;
+      els.shishenList.innerHTML = shichenHTML;
+      
     } catch (e) {
+      console.error('八字计算错误:', e);
       els.bzYear.textContent = '-';
       els.bzMonth.textContent = '-';
       els.bzDay.textContent = '-';
@@ -490,19 +516,19 @@
     // 公历节日
     const solarFestivals = solar.getFestivals();
     if (solarFestivals && solarFestivals.length > 0) {
-      solarFestivals.forEach((f) => festivals.push('☀️ ' + f));
+      solarFestivals.forEach((f) => festivals.push(f));
     }
 
     // 农历节日
     const lunarFestivals = lunar.getFestivals();
     if (lunarFestivals && lunarFestivals.length > 0) {
-      lunarFestivals.forEach((f) => festivals.push('🌙 ' + f));
+      lunarFestivals.forEach((f) => festivals.push(f));
     }
 
     // 其他节日
     const otherFestivals = lunar.getOtherFestivals();
     if (otherFestivals && otherFestivals.length > 0) {
-      otherFestivals.forEach((f) => festivals.push('📅 ' + f));
+      otherFestivals.forEach((f) => festivals.push(f));
     }
 
     if (festivals.length > 0) {

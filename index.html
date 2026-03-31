@@ -26,18 +26,18 @@
         <label for="month">月份</label>
         <select id="month">
           <option value="">请选择</option>
-          <option value="1">1月</option>
-          <option value="2">2月</option>
-          <option value="3">3月</option>
-          <option value="4">4月</option>
-          <option value="5">5月</option>
-          <option value="6">6月</option>
-          <option value="7">7月</option>
-          <option value="8">8月</option>
-          <option value="9">9月</option>
-          <option value="10">10月</option>
-          <option value="11">11月</option>
-          <option value="12">12月</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
         </select>
       </div>
       <div class="input-group">
@@ -60,7 +60,9 @@
     <section class="quick-nav">
       <button class="quick-btn" id="prevYear">◀ 上年</button>
       <button class="quick-btn" id="prevMonth">◀ 上月</button>
+      <button class="quick-btn" id="yesterday">昨日</button>
       <button class="quick-btn today-btn" id="goToday">今天</button>
+      <button class="quick-btn" id="tomorrow">明日</button>
       <button class="quick-btn" id="nextMonth">下月 ▶</button>
       <button class="quick-btn" id="nextYear">下年 ▶</button>
     </section>
@@ -90,7 +92,7 @@
           <span class="value" id="dayOfYear">-</span>
         </div>
         <div class="info-item">
-          <span class="label">年内周</span>
+          <span class="label">本周</span>
           <span class="value" id="weekOfYear">-</span>
         </div>
       </div>
@@ -105,27 +107,23 @@
       </div>
       <div class="info-grid">
         <div class="info-item">
-          <span class="label">年份干支</span>
+          <span class="label">年干支</span>
           <span class="value" id="yearGanzhi">-</span>
         </div>
         <div class="info-item">
-          <span class="label">月份干支</span>
+          <span class="label">月干支</span>
           <span class="value" id="monthGanzhi">-</span>
         </div>
         <div class="info-item">
-          <span class="label">日期干支</span>
+          <span class="label">日干支</span>
           <span class="value" id="dayGanzhi">-</span>
-        </div>
-        <div class="info-item">
-          <span class="label">生肖</span>
-          <span class="value" id="shengxiao">-</span>
         </div>
         <div class="info-item">
           <span class="label">纳音</span>
           <span class="value" id="nayin">-</span>
         </div>
-        <div class="info-item">
-          <span class="label">五星</span>
+        <div class="info-item info-item--wide">
+          <span class="label">五行</span>
           <span class="value" id="wuxing">-</span>
         </div>
       </div>
@@ -135,7 +133,12 @@
     <section class="card jieqi-info" id="jieqiInfo">
       <h2>🌾 节气</h2>
       <div class="jieqi-current" id="currentJieqi">-</div>
+      <div class="jieqi-upcoming" id="jieqiUpcoming"></div>
       <div class="jieqi-list" id="jieqiList"></div>
+      <div class="festival-section">
+        <div class="section-label">近期节日</div>
+        <div class="festival-list" id="festivalList">-</div>
+      </div>
     </section>
 
     <!-- 八字信息 -->
@@ -209,15 +212,12 @@
       <div class="pengzu" id="pengzu">-</div>
     </section>
 
-    <!-- 节日信息 -->
-    <section class="card festival-info" id="festivalInfo">
-      <h2>🎉 节日</h2>
-      <div class="festival-list" id="festivalList">-</div>
-    </section>
-
     <!-- 农历月份信息 -->
     <section class="card month-info" id="monthInfo">
       <h2>📆 当月日历</h2>
+      <div class="month-weekday-header">
+        <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+      </div>
       <div class="month-grid" id="monthGrid"></div>
     </section>
   </div>
